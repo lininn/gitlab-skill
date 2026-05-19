@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitLab"
+  short_description: "Inspect GitLab projects, merge requests, commits, and diffs through the GitLab REST API."
+  default_prompt: "Use this skill to inspect GitLab projects, merge requests, commits, diffs, files, notes, discussions, and pipelines."
