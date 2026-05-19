@@ -83,6 +83,43 @@ GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs pipeline
 GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs pipeline-jobs '{"project":"group/project","pipeline":182770}'
 GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs job-trace '{"project":"group/project","job":123456}'
 
+# Issues.
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs issues '{"project":"group/project","state":"opened"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs issue '{"project":"group/project","iid":42}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs issue-create '{"project":"group/project","title":"Bug report","description":"Description","labels":"bug,urgent"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs issue-update '{"project":"group/project","iid":42,"state_event":"close"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs issue-delete '{"project":"group/project","iid":42}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs issue-notes '{"project":"group/project","iid":42}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs issue-note-create '{"project":"group/project","iid":42,"body":"Comment text"}'
+
+# Labels.
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs labels '{"project":"group/project"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs label-create '{"project":"group/project","name":"bug","color":"#FF0000","description":"Bug reports"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs label-update '{"project":"group/project","label_id":"bug","new_name":"defect","color":"#FF5555"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs label-delete '{"project":"group/project","label_id":"bug"}'
+
+# Snippets.
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs snippets '{"project":"group/project"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs snippet '{"project":"group/project","id":1}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs snippet-create '{"project":"group/project","title":"Example","files":[{"file_path":"example.js","content":"console.log(1)"}]}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs snippet-update '{"project":"group/project","id":1,"title":"Updated title"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs snippet-delete '{"project":"group/project","id":1}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs snippet-raw '{"project":"group/project","id":1}'
+
+# Wikis.
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs wikis '{"project":"group/project"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs wiki '{"project":"group/project","slug":"home"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs wiki-create '{"project":"group/project","title":"Home","content":"Welcome to the wiki"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs wiki-update '{"project":"group/project","slug":"home","content":"Updated content"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs wiki-delete '{"project":"group/project","slug":"home"}'
+
+# Releases.
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs releases '{"project":"group/project"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs release '{"project":"group/project","tag_name":"v1.0.0"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs release-create '{"project":"group/project","tag_name":"v1.0.0","name":"Version 1.0.0","description":"Release notes"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs release-update '{"project":"group/project","tag_name":"v1.0.0","description":"Updated notes"}'
+GITLAB_API_TOKEN=... node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs release-delete '{"project":"group/project","tag_name":"v1.0.0"}'
+
 # Lightweight code analysis helpers.
 node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs get_server_config '{}'
 node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs get_supported_languages '{}'

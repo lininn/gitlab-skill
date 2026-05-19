@@ -83,6 +83,60 @@ const commands = {
   "analyze_files_batch": analyzeFilesBatch,
   "get_supported_languages": () => ({ supportedLanguages: supportedLanguages(), total: supportedLanguages().length }),
   "get_language_rules": ({ language }) => ({ language, rules: getRules(required(language, "language")).map(publicRule), total: getRules(language).length }),
+
+  // Issues API
+  "issues": ({ project, ...query }) => paged("GET", project ? `/projects/${projectId(project)}/issues` : "/issues", query),
+  "issue": ({ project, iid, ...query }) => request("GET", `/projects/${projectId(project)}/issues/${required(iid, "iid")}`, query),
+  "issue-create": createIssue,
+  "create_issue": createIssue,
+  "issue-update": updateIssue,
+  "update_issue": updateIssue,
+  "issue-delete": ({ project, iid }) => request("DELETE", `/projects/${projectId(project)}/issues/${required(iid, "iid")}`),
+  "delete_issue": ({ project, iid }) => request("DELETE", `/projects/${projectId(project)}/issues/${required(iid, "iid")}`),
+  "issue-notes": ({ project, iid, ...query }) => paged("GET", `/projects/${projectId(project)}/issues/${required(iid, "iid")}/notes`, query),
+  "issue-note-create": ({ project, iid, body }) => request("POST", `/projects/${projectId(project)}/issues/${required(iid, "iid")}/notes`, null, { body: required(body, "body") }),
+
+  // Labels API
+  "labels": ({ project, ...query }) => paged("GET", `/projects/${projectId(project)}/labels`, query),
+  "label": ({ project, label_id }) => request("GET", `/projects/${projectId(project)}/labels/${required(label_id, "label_id")}`),
+  "label-create": ({ project, name, color, description, priority }) => request("POST", `/projects/${projectId(project)}/labels`, null, compact({ name: required(name, "name"), color, description, priority })),
+  "create_label": ({ project, name, color, description, priority }) => request("POST", `/projects/${projectId(project)}/labels`, null, compact({ name: required(name, "name"), color, description, priority })),
+  "label-update": ({ project, label_id, new_name, color, description, priority }) => request("PUT", `/projects/${projectId(project)}/labels/${required(label_id, "label_id")}`, null, compact({ new_name, color, description, priority })),
+  "update_label": ({ project, label_id, new_name, color, description, priority }) => request("PUT", `/projects/${projectId(project)}/labels/${required(label_id, "label_id")}`, null, compact({ new_name, color, description, priority })),
+  "label-delete": ({ project, label_id }) => request("DELETE", `/projects/${projectId(project)}/labels/${required(label_id, "label_id")}`),
+  "delete_label": ({ project, label_id }) => request("DELETE", `/projects/${projectId(project)}/labels/${required(label_id, "label_id")}`),
+
+  // Snippets API
+  "snippets": ({ project, ...query }) => paged("GET", `/projects/${projectId(project)}/snippets`, query),
+  "snippet": ({ project, id }) => request("GET", `/projects/${projectId(project)}/snippets/${required(id, "id")}`),
+  "snippet-create": createSnippet,
+  "create_snippet": createSnippet,
+  "snippet-update": updateSnippet,
+  "update_snippet": updateSnippet,
+  "snippet-delete": ({ project, id }) => request("DELETE", `/projects/${projectId(project)}/snippets/${required(id, "id")}`),
+  "delete_snippet": ({ project, id }) => request("DELETE", `/projects/${projectId(project)}/snippets/${required(id, "id")}`),
+  "snippet-raw": ({ project, id }) => request("GET", `/projects/${projectId(project)}/snippets/${required(id, "id")}/raw`, null, null, "text"),
+
+  // Wikis API
+  "wikis": ({ project, ...query }) => paged("GET", `/projects/${projectId(project)}/wikis`, query),
+  "wiki": ({ project, slug }) => request("GET", `/projects/${projectId(project)}/wikis/${encodeURIComponent(required(slug, "slug"))}`),
+  "wiki-create": ({ project, title, content, format }) => request("POST", `/projects/${projectId(project)}/wikis`, null, compact({ title: required(title, "title"), content: required(content, "content"), format })),
+  "create_wiki": ({ project, title, content, format }) => request("POST", `/projects/${projectId(project)}/wikis`, null, compact({ title: required(title, "title"), content: required(content, "content"), format })),
+  "wiki-update": ({ project, slug, title, content, format }) => request("PUT", `/projects/${projectId(project)}/wikis/${encodeURIComponent(required(slug, "slug"))}`, null, compact({ title, content, format })),
+  "update_wiki": ({ project, slug, title, content, format }) => request("PUT", `/projects/${projectId(project)}/wikis/${encodeURIComponent(required(slug, "slug"))}`, null, compact({ title, content, format })),
+  "wiki-delete": ({ project, slug }) => request("DELETE", `/projects/${projectId(project)}/wikis/${encodeURIComponent(required(slug, "slug"))}`),
+  "delete_wiki": ({ project, slug }) => request("DELETE", `/projects/${projectId(project)}/wikis/${encodeURIComponent(required(slug, "slug"))}`),
+
+  // Releases API
+  "releases": ({ project, ...query }) => paged("GET", `/projects/${projectId(project)}/releases`, query),
+  "release": ({ project, tag_name }) => request("GET", `/projects/${projectId(project)}/releases/${encodeURIComponent(required(tag_name, "tag_name"))}`),
+  "release-create": createRelease,
+  "create_release": createRelease,
+  "release-update": updateRelease,
+  "update_release": updateRelease,
+  "release-delete": ({ project, tag_name }) => request("DELETE", `/projects/${projectId(project)}/releases/${encodeURIComponent(required(tag_name, "tag_name"))}`),
+  "delete_release": ({ project, tag_name }) => request("DELETE", `/projects/${projectId(project)}/releases/${encodeURIComponent(required(tag_name, "tag_name"))}`),
+
   "request": ({ method = "GET", path, query, body, response = "json" }) => request(method, required(path, "path"), query, body, response),
 };
 
@@ -224,6 +278,88 @@ async function addReviewComment({ repository, project, pullRequestNumber, mergeR
     });
   }
   return commands["mr-note-create"]({ project: resolvedProject, iid: resolvedIid, body });
+}
+
+async function createIssue(args) {
+  const project = args.project || args.projectId || args.repository;
+  return request("POST", `/projects/${projectId(project)}/issues`, null, compact({
+    title: args.title || args.issue_title,
+    description: args.description || args.body,
+    labels: args.labels,
+    assignee_ids: args.assigneeIds || args.assignee_ids,
+    milestone_id: args.milestoneId || args.milestone_id,
+    due_date: args.dueDate || args.due_date,
+    weight: args.weight,
+    confidential: args.confidential,
+    issue_type: args.issueType || args.issue_type,
+  }));
+}
+
+async function updateIssue(args) {
+  const project = args.project || args.projectId || args.repository;
+  const iid = args.iid || args.issue_id || args.issueId;
+  return request("PUT", `/projects/${projectId(project)}/issues/${required(iid, "iid")}`, null, compact({
+    title: args.title,
+    description: args.description || args.body,
+    labels: args.labels,
+    add_labels: args.addLabels || args.add_labels,
+    remove_labels: args.removeLabels || args.remove_labels,
+    assignee_ids: args.assigneeIds || args.assignee_ids,
+    milestone_id: args.milestoneId || args.milestone_id,
+    due_date: args.dueDate || args.due_date,
+    weight: args.weight,
+    state_event: args.stateEvent || args.state_event,
+    confidential: args.confidential,
+  }));
+}
+
+async function createSnippet(args) {
+  const project = args.project || args.projectId || args.repository;
+  const files = args.files || [{ file_path: args.file_path || args.fileName || "snippet.txt", content: args.content || args.code }];
+  return request("POST", `/projects/${projectId(project)}/snippets`, null, compact({
+    title: args.title,
+    description: args.description,
+    visibility: args.visibility || "private",
+    files,
+  }));
+}
+
+async function updateSnippet(args) {
+  const project = args.project || args.projectId || args.repository;
+  const id = args.id || args.snippet_id || args.snippetId;
+  const files = args.files ? args.files : args.content ? [{ file_path: args.file_path || args.fileName || "snippet.txt", content: args.content }] : undefined;
+  return request("PUT", `/projects/${projectId(project)}/snippets/${required(id, "id")}`, null, compact({
+    title: args.title,
+    description: args.description,
+    visibility: args.visibility,
+    files,
+  }));
+}
+
+async function createRelease(args) {
+  const project = args.project || args.projectId || args.repository;
+  return request("POST", `/projects/${projectId(project)}/releases`, null, compact({
+    tag_name: args.tag_name || args.tag || args.tagName,
+    name: args.name || args.release_name,
+    description: args.description || args.body || args.notes,
+    ref: args.ref,
+    tag_message: args.tagMessage || args.tag_message,
+    milestones: args.milestones,
+    released_at: args.releasedAt || args.released_at,
+    assets: args.assets,
+  }));
+}
+
+async function updateRelease(args) {
+  const project = args.project || args.projectId || args.repository;
+  const tagName = args.tag_name || args.tag || args.tagName;
+  return request("PUT", `/projects/${projectId(project)}/releases/${encodeURIComponent(required(tagName, "tag_name"))}`, null, compact({
+    name: args.name || args.release_name,
+    description: args.description || args.body || args.notes,
+    milestones: args.milestones,
+    released_at: args.releasedAt || args.released_at,
+    assets: args.assets,
+  }));
 }
 
 async function createMergeRequest(args) {
