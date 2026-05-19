@@ -13,13 +13,22 @@ A sanitized, portable skill for working with GitLab through the REST API.
 
 Copy `gitlab/` into your agent's skills directory and keep the folder name as `gitlab`.
 
-Example for Codex:
+Codex:
 
 ```bash
 cp -R gitlab ~/.codex/skills/gitlab
 ```
 
-For other skill-based agents such as Claude setups, copy the same `gitlab/` folder into that agent's skills directory and preserve the internal relative paths.
+Claude Code:
+
+```bash
+mkdir -p ~/.claude/skills
+cp -R gitlab ~/.claude/skills/gitlab
+```
+
+Other skill-based agents:
+
+Copy the same `gitlab/` folder into that agent's skills directory and preserve the internal relative paths.
 
 Then configure:
 
@@ -27,5 +36,11 @@ Then configure:
 GITLAB_API_TOKEN=glpat_xxxxxxxxxxxxxxxxxxxx
 GITLAB_API_BASE_URL=https://gitlab.example.com/api/v4
 ```
+
+Example `.env` locations:
+
+- Codex: `~/.codex/skills/gitlab/.env`
+- Claude Code: `~/.claude/skills/gitlab/.env`
+- Project-local fallback: `<your-project>/.env`
 
 For details, see [gitlab/README.md](gitlab/README.md).

@@ -15,13 +15,21 @@ It is adapted from a private internal wrapper, but all organization-specific nam
 
 Copy this directory into your agent's skills directory and keep the folder name as `gitlab`.
 
-Example for Codex:
+Codex:
 
 ```bash
 ~/.codex/skills/gitlab
 ```
 
-For Claude-style or other skill-based agent setups, place the same `gitlab/` folder under that tool's skills directory and preserve the internal relative paths.
+Claude Code:
+
+```bash
+~/.claude/skills/gitlab
+```
+
+Other skill-based agents:
+
+Place the same `gitlab/` folder under that tool's skills directory and preserve the internal relative paths.
 
 The expected structure is:
 
@@ -51,7 +59,7 @@ Notes:
 - For `gitlab.com`, use `https://gitlab.com/api/v4`.
 - The script loads variables in this order:
   1. Existing process environment
-  2. `~/.codex/skills/gitlab/.env`
+  2. Skill-local `.env` next to `scripts/gitlab-api.mjs`
   3. Current working directory `.env`
 
 ## Usage
@@ -67,6 +75,7 @@ node /path/to/skills/gitlab/scripts/gitlab-api.mjs create_merge_request '{"proje
 ```
 
 If your host agent installs skills under `~/.codex/skills`, replace `/path/to/skills` with `~/.codex/skills`.
+If your host agent installs skills under `~/.claude/skills`, replace `/path/to/skills` with `~/.claude/skills`.
 
 ## Security
 
