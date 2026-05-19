@@ -1,23 +1,27 @@
-# GitLab Skill for Codex
+# GitLab Skill
 
-This directory contains a sanitized, publishable Codex skill for operating GitLab through the REST API.
+This directory contains a sanitized, publishable generic skill for operating GitLab through the REST API.
 
 It is adapted from a private internal wrapper, but all organization-specific names, domains, and credentials have been removed. The public version is generic and works with either `gitlab.com` or a self-hosted GitLab instance.
 
 ## Contents
 
-- `SKILL.md`: the skill instructions shown to Codex
+- `SKILL.md`: the skill instructions shown to the host agent
 - `agents/openai.yaml`: small UI metadata file
 - `scripts/gitlab-api.mjs`: CLI helper for GitLab REST API calls
 - `.env.example`: example environment variables
 
 ## Install
 
-Copy this directory to:
+Copy this directory into your agent's skills directory and keep the folder name as `gitlab`.
+
+Example for Codex:
 
 ```bash
 ~/.codex/skills/gitlab
 ```
+
+For Claude-style or other skill-based agent setups, place the same `gitlab/` folder under that tool's skills directory and preserve the internal relative paths.
 
 The expected structure is:
 
@@ -55,12 +59,14 @@ Notes:
 Examples:
 
 ```bash
-node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs me '{}'
-node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs project '{"project":"group/project"}'
-node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs mr '{"project":"group/project","iid":42}'
-node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs mr-diffs '{"project":"group/project","iid":42,"unidiff":true}'
-node ~/.codex/skills/gitlab/scripts/gitlab-api.mjs create_merge_request '{"projectId":"group/project","sourceBranch":"feature/x","targetBranch":"main","title":"Feature X"}'
+node /path/to/skills/gitlab/scripts/gitlab-api.mjs me '{}'
+node /path/to/skills/gitlab/scripts/gitlab-api.mjs project '{"project":"group/project"}'
+node /path/to/skills/gitlab/scripts/gitlab-api.mjs mr '{"project":"group/project","iid":42}'
+node /path/to/skills/gitlab/scripts/gitlab-api.mjs mr-diffs '{"project":"group/project","iid":42,"unidiff":true}'
+node /path/to/skills/gitlab/scripts/gitlab-api.mjs create_merge_request '{"projectId":"group/project","sourceBranch":"feature/x","targetBranch":"main","title":"Feature X"}'
 ```
+
+If your host agent installs skills under `~/.codex/skills`, replace `/path/to/skills` with `~/.codex/skills`.
 
 ## Security
 

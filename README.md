@@ -1,21 +1,25 @@
 # gitlab-skill
 
-A sanitized Codex skill for working with GitLab through the REST API.
+A sanitized, portable skill for working with GitLab through the REST API.
 
 ## Repo Layout
 
-- `gitlab/`: the installable Codex skill directory
+- `gitlab/`: the installable generic skill directory
 - `gitlab/SKILL.md`: skill instructions
 - `gitlab/scripts/gitlab-api.mjs`: CLI helper for GitLab REST API calls
 - `gitlab/.env.example`: example configuration
 
 ## Install
 
-Copy `gitlab/` into your Codex skills directory:
+Copy `gitlab/` into your agent's skills directory and keep the folder name as `gitlab`.
+
+Example for Codex:
 
 ```bash
 cp -R gitlab ~/.codex/skills/gitlab
 ```
+
+For other skill-based agents such as Claude setups, copy the same `gitlab/` folder into that agent's skills directory and preserve the internal relative paths.
 
 Then configure:
 
